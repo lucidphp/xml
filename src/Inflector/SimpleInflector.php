@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -19,41 +19,28 @@ namespace Lucid\Xml\Inflector;
  *
  * @class SimleInflector
  *
- * @package Selene\Module\Xml
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  */
 class SimpleInflector implements InflectorInterface
 {
+    /** @var string */
     const APPEND = '+';
+
+    /** @var string */
     const REDUCE = '-';
 
-    /**
-     * cache
-     *
-     * @var array
-     */
+    /** @var array */
     protected $cache;
 
-    /**
-     * truncate
-     *
-     * @var boolean
-     */
+    /** @var bool */
     protected $truncate;
 
-    /**
-     * singulars
-     *
-     * @var array
-     */
+    /** @var array */
     protected $singulars;
 
-    /**
-     * plurals
-     *
-     * @var array
-     */
+    /** @var array */
     protected $plurals;
 
     /**

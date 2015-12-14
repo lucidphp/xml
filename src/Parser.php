@@ -230,26 +230,25 @@ class Parser implements ParserInterface
      */
     public static function getPhpValue($val, $default = null, ParserInterface $parser = null)
     {
-        var_dump($val);
         if ($val instanceof DOMElement) {
             $parser = $parser ?: new static;
+
             return $parser->parseDomElement($val);
         }
 
         if (0 === strlen($val)) {
-            var_dump($val);
             return $default;
         }
 
-        if (is_numeric($val)) {
-            var_dump($val);
-            return 0 === strpos($val, '0x') ? hexdec($val) :
-                (ctype_digit($val) ? intval($val) : floatval($val));
+        if (0 === strpos($val, '0x')) {
+            return hexdec($val);
         }
 
-        var_dump($val);
+        if (is_numeric($val)) {
+            return ctype_digit($val) ? intval($val) : floatval($val);
+        }
 
-        if (($lval = strtolower($val)) === 'true' || $lval === 'false') {
+        if (in_array($lval = strtolower($val), ['true', 'false'])) {
             return $lval === 'true' ? true : false;
         }
 

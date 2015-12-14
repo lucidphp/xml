@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml\Traits package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
@@ -71,7 +71,7 @@ trait XmlLoaderTrait
      * @access public
      * @return mixed
      */
-    public function getOption($option = null, $default = null)
+    public function getOption($option, $default = null)
     {
         return $this->getDefault($this->options, $option, $default);
     }
@@ -80,7 +80,7 @@ trait XmlLoaderTrait
      * load
      *
      * @param mixed $file
-     * @access public
+     *
      * @return DOMDocument or SimpleXMLElement
      */
     public function load($file)

@@ -41,6 +41,8 @@ class WriterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertXmlStringEqualsXmlString('<root></root>', $xml);
 
+        $writer = new Writer($n = $this->mockNormalizer());
+
         $n->method('ensureBuildable')->with($args = ['bar' => 'baz'])->willReturn($args);
 
         $n->method('normalize')->willReturnCallback(function ($arg) {

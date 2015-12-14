@@ -151,14 +151,6 @@ class SimpleXMLElement extends SimpleXML
      */
     protected function getPhpValue($value)
     {
-        switch (true) {
-            case is_numeric($value):
-                return 0 === strpos($value, '0x') ?
-                    hexdec($value) : (ctype_digit($value) ? intval($value) : floatval($value));
-            case in_array(strtolower($value), ['true', 'false']):
-                return 'false' === $value ? false : true;
-            default:
-                return 0 === strlen(trim($value)) ? null : $value;
-        };
+        return Parser::getPhpValue($value);
     }
 }

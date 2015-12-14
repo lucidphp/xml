@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This File is part of the Lucid\Xml\Tests package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -17,13 +17,11 @@ use Lucid\Xml\Dom\DOMDocument;
 use Lucid\Xml\Loader\LoaderInterface;
 
 /**
- * @class ParserTest extends \PHPUnit_Framework_TestCase
- * @see \PHPUnit_Framework_TestCase
+ * @class ParserTest
  *
  * @package Lucid\Xml\Tests
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
- * @license MIT
  */
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -267,12 +265,12 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $elementChild = $dom->createElement('foo', 'bar');
         $elementParent->appendChild($elementChild);
 
-        //$this->assertEquals(['foo' => 'bar'], Parser::getPhpValue($elementParent));
-        //$this->assertNull(Parser::getPhpValue(''));
-        //$this->assertSame(10, Parser::getPhpValue('10'));
-        //$this->assertSame(1.2, Parser::getPhpValue('1.2'));
-        //$this->assertTrue(Parser::getPhpValue('true'));
-        //$this->assertFalse(Parser::getPhpValue('false'));
+        $this->assertEquals(['foo' => 'bar'], Parser::getPhpValue($elementParent));
+        $this->assertNull(Parser::getPhpValue(''));
+        $this->assertSame(10, Parser::getPhpValue('10'));
+        $this->assertSame(1.2, Parser::getPhpValue('1.2'));
+        $this->assertTrue(Parser::getPhpValue('true'));
+        $this->assertFalse(Parser::getPhpValue('false'));
         $this->assertSame(3840, Parser::getPhpValue('0xF00'));
     }
 

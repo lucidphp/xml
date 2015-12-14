@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This File is part of the Lucid\Xml\Tests package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -15,7 +15,8 @@ use Lucid\Xml\Loader\Loader;
 
 /**
  * @class XmlLoaderTest
- * @package Lucid\Xml\Tests
+ *
+ * @package Lucid\Xml
  * @version $Id$
  */
 class LoaderTest extends \PHPUnit_Framework_TestCase

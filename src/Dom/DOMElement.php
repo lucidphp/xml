@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
@@ -11,16 +11,15 @@
 
 namespace Lucid\Xml\Dom;
 
-use \DOMElement as XmlElement;
+use BadMethodCallException;
+use DOMElement as XmlElement;
 
 /**
- * @class DOMElement extends BaseDOMElement
- * @see BaseDOMElement
+ * @class DOMElement
  *
- * @package Selene\Module\Xml\Dom
+ * @package Lucid\Xml
  * @version $Id$
- * @author Thomas Appel <mail@thomas-appel.com>
- * @license MIT
+ * @author iwyg <mail@thomas-appel.com>
  */
 class DOMElement extends XmlElement
 {
@@ -36,7 +35,7 @@ class DOMElement extends XmlElement
             return $this->ownerDocument->getXpath()->query($query, $this);
         }
 
-        throw new \BadMethodCallException('cannot xpath on element without an owner document');
+        throw new BadMethodCallException('cannot xpath on element without an owner document');
     }
 
     /**
@@ -46,12 +45,12 @@ class DOMElement extends XmlElement
      * @access public
      * @return mixed
      */
-    public function appendDomElement(\DOMElement $import, $deep = true)
+    public function appendDomElement(XMLElement $import, $deep = true)
     {
         if ($this->ownerDocument) {
             return $this->ownerDocument->appendDomElement($import, $this, $deep);
         }
 
-        throw new \BadMethodCallException('cannot add an element without an owner document');
+        throw new BadMethodCallException('cannot add an element without an owner document');
     }
 }

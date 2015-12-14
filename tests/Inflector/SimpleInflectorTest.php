@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This File is part of the Lucid\Xml\Tests\Inflector package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -16,7 +16,7 @@ use Lucid\Xml\Inflector\SimpleInflector;
 /**
  * @class SimpleInflectorTest
  *
- * @package Lucid\Xml\Tests\Inflector
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  */

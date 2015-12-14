@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This File is part of the Lucid\Xml\Tests\Normalizer package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -20,10 +20,9 @@ use Lucid\Xml\Tests\Normalizer\Stubs\NestedPropertyStub;
 use Lucid\Xml\Tests\Normalizer\Stubs\TraversableStub;
 
 /**
- * @class NormalizerTest extends \PHPUnit_Framework_TestCase
- * @see \PHPUnit_Framework_TestCase
+ * @class NormalizerTest
  *
- * @package Lucid\Xml\Tests\Normalizer
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  * @license MIT
