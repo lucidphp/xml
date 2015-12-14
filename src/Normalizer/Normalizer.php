@@ -1,13 +1,14 @@
 <?php
 
 /*
- * This File is part of the Thapp\XmlBuilder package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
  */
+
 
 namespace Lucid\Xml\Normalizer;
 
@@ -18,42 +19,32 @@ use Lucid\Common\Helper\Str;
 use Lucid\Xml\Traits\XmlHelperTrait;
 
 /**
- * @class Normalizer implements NormalizerInterface
- * @see NormalizerInterface
+ * @class Normalizer
  *
- * @package Selene\Module\Xml\Normalizer
+ * @package Lucid\Xml
  * @version $Id$
- * @author Thomas Appel <mail@thomas-appel.com>
- * @license MIT
+ * @author iwyg <mail@thomas-appel.com>
  */
 class Normalizer implements NormalizerInterface
 {
     use XmlHelperTrait;
 
     /**
-     * objectCache
-     *
      * @var array
      */
     protected $objectCache;
 
     /**
-     * ignoredAttributes
-     *
      * @var array
      */
     protected $ignoredAttributes;
 
     /**
-     * ignoredObjects
-     *
      * @var array
      */
     protected $ignoredObjects;
 
     /**
-     * normalized
-     *
      * @var array
      */
     protected $normalized;

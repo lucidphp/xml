@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
@@ -11,16 +11,15 @@
 
 namespace Lucid\Xml\Dom;
 
-use \DOMNode;
-use \DOMXpath;
-use \DOMDocument as Document;
-use \DOMElement as XmlElement;
+use DOMNode;
+use DOMXpath;
+use DOMDocument as Document;
+use DOMElement as XmlElement;
 
 /**
  * @class DOMDocument extends BaseDom
- * @see BaseDom
  *
- * @package Selene\Module\Xml
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  * @license MIT

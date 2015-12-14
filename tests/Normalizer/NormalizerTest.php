@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This File is part of the Lucid\Xml\Tests\Normalizer package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -11,7 +11,6 @@
 
 namespace Lucid\Xml\Tests\Normalizer;
 
-use Mockery as m;
 use Lucid\Xml\Normalizer\Normalizer;
 use Lucid\Xml\Normalizer\NormalizerInterface;
 use Lucid\Xml\Tests\Normalizer\Stubs\ArrayableStub;
@@ -21,10 +20,9 @@ use Lucid\Xml\Tests\Normalizer\Stubs\NestedPropertyStub;
 use Lucid\Xml\Tests\Normalizer\Stubs\TraversableStub;
 
 /**
- * @class NormalizerTest extends \PHPUnit_Framework_TestCase
- * @see \PHPUnit_Framework_TestCase
+ * @class NormalizerTest
  *
- * @package Lucid\Xml\Tests\Normalizer
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  * @license MIT
@@ -218,16 +216,5 @@ class NormalizerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($xml, $normalizer->ensureBuildable($xml));
         $this->assertSame($asset, $normalizer->ensureBuildable($data));
         $this->assertNull($normalizer->ensureBuildable(null));
-    }
-
-    /**
-     * tearDown
-     *
-     * @access protected
-     * @return void
-     */
-    protected function tearDown()
-    {
-        m::close();
     }
 }

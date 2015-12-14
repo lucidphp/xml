@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This File is part of the Lucid\Xml\Inflector package
+ * This File is part of the Lucid\Xml package
  *
  * (c) iwyg <mail@thomas-appel.com>
  *
@@ -14,7 +14,7 @@ namespace Lucid\Xml\Inflector;
 /**
  * @interface InflectorInterface
  *
- * @package Lucid\Xml\Inflector
+ * @package Lucid\Xml
  * @version $Id$
  * @author iwyg <mail@thomas-appel.com>
  */

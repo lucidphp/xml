@@ -1,4 +1,4 @@
-# Selene Component for loading, parsing and, writing xml
+# Lucid Component for loading, parsing and, writing xml
 
 
 ## Testing
@@ -19,7 +19,7 @@ to a php array.
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -32,7 +32,7 @@ $parser->parse('<data><foo>bar</foo></data>');
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -45,7 +45,7 @@ $parser->parse('/path/to/data.xml');
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -58,7 +58,7 @@ $parser->parseDom($dom);
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -74,7 +74,7 @@ $parser->parseDomElement($element);
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -91,7 +91,7 @@ The default normalizer transforms dashes to underscores and camelcase to snakeca
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -113,7 +113,7 @@ If attribute merging is disabled, use this to change the default attributes key
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -130,7 +130,7 @@ handled as list.
 ```php
 <?php
 
-use \Selene\Module\Xml\Parser;
+use Lucid\Xml\Parser;
 
 $parser = new Parser;
 
@@ -189,7 +189,7 @@ $parser->setPluralizer(function ($string) {
 ```php
 <?php
 
-use \Selene\Module\Xml\Writer;
+use Lucid\Xml\Writer;
 
 $writer = new Writer;
 
@@ -207,13 +207,13 @@ $writer->dump($data, 'data'); // <data><foo>bar</foo></data>
 
 ### Dumping php data to a DOMDocument
 
-Note: this will create an instance of `Selene\Module\Xml\Dom\DOMDocument`.
+Note: this will create an instance of `Lucid\Xml\Dom\DOMDocument`.
 
 ```php
 
 <?php
 
-use \Selene\Module\Xml\Writer;
+use Lucid\Xml\Writer;
 
 $writer = new Writer;
 
@@ -231,13 +231,13 @@ $dom = $writer->writeToDom($data);
 
 Normaly, the `NormalierInterface` implementation is set for you when instantiating a new `Writer`, however you can set your own normalizer instance.
 
-Note: the normalizer must implement the `Selene\Module\Xml\Normalizer\NormalierInterface` interface.
+Note: the normalizer must implement the `Lucid\Xml\Normalizer\NormalierInterface` interface.
 
 ```php
 <?php
 
-use \Selene\Module\Xml\Writer;
-use \Selene\Module\Xml\Normalizer\Normalizer;
+use Lucid\Xml\Writer;
+use Lucid\Xml\Normalizer\Normalizer;
 
 $writer = new Writer(new Normalizer);
 

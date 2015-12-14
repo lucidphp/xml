@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This File is part of the Lucid\Xml\Tests package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -11,14 +11,13 @@
 
 namespace Lucid\Xml\Tests;
 
-use Mockery as m;
 use Lucid\Xml\Writer;
 use Lucid\Xml\Normalizer\Normalizer;
 use Lucid\Xml\Normalizer\NormalizerInterface;
 
 /**
  * @class WriterTest
- * @package Lucid\Xml\Tests
+ * @package Lucid\Xml
  * @version $Id$
  */
 class WriterTest extends \PHPUnit_Framework_TestCase
@@ -27,23 +26,26 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function itShouldBeInstantiable()
     {
-        $writer = new Writer(m::mock('\Lucid\Xml\Normalizer\NormalizerInterface'));
+        $writer = new Writer($this->mockNormalizer());
         $this->assertInstanceof('\Lucid\Xml\Writer', $writer);
     }
+
 
     /** @test */
     public function itSouldDumpAnXmlString()
     {
-        $writer = new Writer($n = m::mock('\Lucid\Xml\Normalizer\NormalizerInterface'));
+        $writer = new Writer($n = $this->mockNormalizer());
 
-        $n->shouldReceive('ensureBuildable')->with([])->andReturn([]);
+        $n->method('ensureBuildable')->with([])->willReturn([]);
         $xml = $writer->dump([]);
 
         $this->assertXmlStringEqualsXmlString('<root></root>', $xml);
 
-        $n->shouldReceive('ensureBuildable')->with($args = ['bar' => 'baz'])->andReturn($args);
+        $writer = new Writer($n = $this->mockNormalizer());
 
-        $n->shouldReceive('normalize')->andReturnUsing(function ($arg) {
+        $n->method('ensureBuildable')->with($args = ['bar' => 'baz'])->willReturn($args);
+
+        $n->method('normalize')->willReturnCallback(function ($arg) {
             return $arg;
         });
 
@@ -59,9 +61,9 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function itShouldWriteToADOMDocument()
     {
-        $writer = new Writer($n = m::mock('\Lucid\Xml\Normalizer\NormalizerInterface'));
+        $writer = new Writer($n = $this->mockNormalizer());
 
-        $n->shouldReceive('ensureBuildable')->with([])->andReturn([]);
+        $n->method('ensureBuildable')->with([])->willReturn([]);
         $xml = $writer->writeToDom([]);
 
         $this->assertInstanceof('DOMDocument', $xml);
@@ -471,27 +473,23 @@ class WriterTest extends \PHPUnit_Framework_TestCase
 
     protected function getNormalizerMock()
     {
-        $n = m::mock('\Lucid\Xml\Normalizer\NormalizerInterface');
+        $n = $this->mockNormalizer();
 
-        $n->shouldReceive('ensureBuildable')->andReturnUsing(function ($arg) {
+        $n->method('ensureBuildable')->willReturnCallback(function ($arg) {
             return $arg;
         });
 
-        $n->shouldReceive('normalize')->andReturnUsing(function ($arg) {
+        $n->method('normalize')->willReturnCallback(function ($arg) {
             return $arg;
         });
 
         return $n;
     }
 
-    /**
-     * tearDown
-     *
-     * @access protected
-     * @return void
-     */
-    protected function tearDown()
+    private function mockNormalizer()
     {
-        m::close();
+        return $this->getMockbuilder('\Lucid\Xml\Normalizer\NormalizerInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 }

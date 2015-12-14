@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This File is part of the Lucid\Compiler package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -17,9 +17,8 @@ use Lucid\Common\Traits\Getter;
 
 /**
  * @class Loader implements LoaderInterface
- * @see LoaderInterface
  *
- * @package Lucid\Xml\Loader
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  * @license MIT
@@ -38,7 +37,9 @@ class Loader implements LoaderInterface
     protected $defaultOptions;
 
     /**
-     * @access public
+     * Contructor.
+     *
+     * @param array $options
      */
     public function __construct(array $options = [])
     {
@@ -47,23 +48,13 @@ class Loader implements LoaderInterface
         $this->loadOptions($options);
     }
 
-    /**
-     * __clone
-     *
-     * @access public
-     * @return mixed
-     */
     public function __clone()
     {
         $this->resetOptions();
     }
 
     /**
-     * setOption
-     *
-     * @param mixed $option
-     * @param mixed $value
-     * @access public
+     * {@inheritdoc}
      */
     public function setOption($option, $value)
     {
@@ -71,24 +62,15 @@ class Loader implements LoaderInterface
     }
 
     /**
-     * getOption
-     *
-     * @param mixed $option
-     * @param mixed $default
-     * @access public
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getOption($option = null, $default = null)
+    public function getOption($option, $default = null)
     {
         return $this->getDefault($this->options, $option, $default);
     }
 
     /**
-     * load
-     *
-     * @param mixed $file
-     * @access public
-     * @return DOMDocument or SimpleXMLElement
+     * {@inheritdoc}
      */
     public function load($file, array $options = [])
     {
@@ -211,7 +193,6 @@ class Loader implements LoaderInterface
      *
      * @param array $options
      *
-     * @access private
      * @return mixed
      */
     private function loadOptions(array $options)
@@ -230,7 +211,6 @@ class Loader implements LoaderInterface
     /**
      * resotereOptions
      *
-     * @access private
      * @return void
      */
     private function resotereOptions()
@@ -242,8 +222,6 @@ class Loader implements LoaderInterface
     /**
      * resetOptions
      *
-     *
-     * @access private
      * @return void
      */
     private function resetOptions()

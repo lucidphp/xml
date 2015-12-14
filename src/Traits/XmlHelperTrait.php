@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
  */
+
 
 namespace Lucid\Xml\Traits;
 
 /**
  * @trait XmlHelperTrait
  *
- * @package Selene\Module\Xml\Traits
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
- * @license MIT
  */
 trait XmlHelperTrait
 {
@@ -26,8 +26,7 @@ trait XmlHelperTrait
      *
      * @param mixed $element
      *
-     * @access public
-     * @return boolean
+     * @return bool
      */
     public function isXmlElement($element)
     {
@@ -39,7 +38,7 @@ trait XmlHelperTrait
      *
      * @param mixed $value
      *
-     * @return void
+     * @return bool
      */
     public function valueIsList($value)
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This File is part of the Lucid\Xml\Tests\Dom package
+ * This File is part of the Lucid\Xml package
  *
  * (c) Thomas Appel <mail@thomas-appel.com>
  *
@@ -16,9 +16,8 @@ use Lucid\Xml\Dom\DOMDocument;
 
 /**
  * @class DomElementTest extends \PHPUnit_Framework_TestCase
- * @see \PHPUnit_Framework_TestCase
  *
- * @package Lucid\Xml\Tests\Dom
+ * @package Lucid\Xml
  * @version $Id$
  * @author Thomas Appel <mail@thomas-appel.com>
  * @license MIT
