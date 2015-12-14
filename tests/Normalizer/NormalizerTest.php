@@ -11,7 +11,6 @@
 
 namespace Lucid\Xml\Tests\Normalizer;
 
-use Mockery as m;
 use Lucid\Xml\Normalizer\Normalizer;
 use Lucid\Xml\Normalizer\NormalizerInterface;
 use Lucid\Xml\Tests\Normalizer\Stubs\ArrayableStub;
@@ -218,16 +217,5 @@ class NormalizerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($xml, $normalizer->ensureBuildable($xml));
         $this->assertSame($asset, $normalizer->ensureBuildable($data));
         $this->assertNull($normalizer->ensureBuildable(null));
-    }
-
-    /**
-     * tearDown
-     *
-     * @access protected
-     * @return void
-     */
-    protected function tearDown()
-    {
-        m::close();
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
@@ -21,10 +21,12 @@ use Lucid\Common\Traits\Getter;
 
 /**
  * @class Parser
- * @package Selene\Module\Xml
+ *
+ * @package Lucid\Xml
  * @version $Id$
+ * @author iwyg <mail@thomas-appel.com>
  */
-class XmlParser implements ParserInterface
+class Parser implements ParserInterface
 {
     use Getter;
     use XmlHelperTrait;
@@ -228,19 +230,24 @@ class XmlParser implements ParserInterface
      */
     public static function getPhpValue($val, $default = null, ParserInterface $parser = null)
     {
+        var_dump($val);
         if ($val instanceof DOMElement) {
             $parser = $parser ?: new static;
             return $parser->parseDomElement($val);
         }
 
         if (0 === strlen($val)) {
+            var_dump($val);
             return $default;
         }
 
         if (is_numeric($val)) {
+            var_dump($val);
             return 0 === strpos($val, '0x') ? hexdec($val) :
                 (ctype_digit($val) ? intval($val) : floatval($val));
         }
+
+        var_dump($val);
 
         if (($lval = strtolower($val)) === 'true' || $lval === 'false') {
             return $lval === 'true' ? true : false;

@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This File is part of the Selene\Module\Xml package
+ * This File is part of the Lucid\Xml package
  *
- * (c) Thomas Appel <mail@thomas-appel.com>
+ * (c) iwyg <mail@thomas-appel.com>
  *
  * For full copyright and license information, please refer to the LICENSE file
  * that was distributed with this package.
@@ -20,62 +20,33 @@ use Lucid\Xml\Normalizer\NormalizerInterface;
 /**
  * @class Writer
  *
- * @package Selene\Module\Xml
+ * @package Lucid\Xml
  * @version $Id$
- * @author Thomas Appel <mail@thomas-appel.com>
- * @license MIT
+ * @author iwyg <mail@thomas-appel.com>
  */
-class XmlWriter
+class Writer
 {
     use XmlHelperTrait;
 
-    /**
-     * dom
-     *
-     * @var mixed
-     */
+    /** @var DOMDocument */
     protected $dom;
 
-    /**
-     * encoding
-     *
-     * @var string
-     */
+    /** @var string */
     protected $encoding;
 
-    /**
-     * normalizer
-     *
-     * @var NormalizerInterface
-     */
+    /** @var NormalizerInterface */
     protected $normalizer;
 
-    /**
-     * inflector
-     *
-     * @var callable
-     */
+    /** @var callable */
     protected $inflector;
 
-    /**
-     * attributemap
-     *
-     * @var mixed
-     */
+    /** @var mixed */
     protected $attributemap;
 
-    /**
-     * nodeValueKey
-     *
-     * @var string
-     */
+    /** @var string */
     protected $nodeValueKey;
 
-    /**
-     * indexKey
-     *
-     * @var mixed
-     */
+    /** @var string */
     protected $indexKey;
 
     /**
