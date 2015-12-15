@@ -28,6 +28,13 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     {
         $writer = new Writer($this->mockNormalizer());
         $this->assertInstanceof('\Lucid\Xml\Writer', $writer);
+
+        $w = new Writer(new Normalizer);
+        $w->useKeyAsValue('value');
+        $args = [
+            'foo' => ['@attributes' => ['bar' => 'baz'], 'value' => 'tab']
+        ];
+        var_dump($w->dump($args));
     }
 
 

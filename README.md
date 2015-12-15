@@ -1,18 +1,33 @@
-# Lucid Component for loading, parsing and, writing xml
+# XML writer and parser utilities
 
+[![Author](http://img.shields.io/badge/author-iwyg-blue.svg?style=flat-square)](https://github.com/iwyg)
+[![Source Code](http://img.shields.io/badge/source-lucid/signal-blue.svg?style=flat-square)](https://github.com/lucidphp/xml/tree/local-dev)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/lucidphp/xml/blob/local-dev/LICENSE.md)
+
+[![Build Status](https://img.shields.io/travis/lucidphp/xml/local-dev.svg?style=flat-square)](https://travis-ci.org/lucidphp/xml)
+<!--
+[![Code Coverage](https://img.shields.io/coveralls/lucidphp/xml/local-dev.svg?style=flat-square)](https://coveralls.io/r/lucidphp/xml)
+-->
+[![HHVM](https://img.shields.io/hhvm/lucid/xml/local-dev.svg?style=flat-square)](http://hhvm.h4cc.de/package/lucid/xml)
+
+## Installing
+
+```bash
+$ composer require lucid/xml --save
+```
 
 ## Testing
 
-Run tests with: 
+Run tests with:
 
 ```bash
-$ vendor/bin/phpunit
+$ ./vendor/bin/phpunit
 ```
 
 ## The Parser
 
 The `Parser` class can parse xml string, files, DOMDocuments, and DOMElements
-to a php array. 
+to a php array.
 
 
 ### Parsing xml strings
@@ -229,9 +244,9 @@ $dom = $writer->writeToDom($data);
 
 ### Set the normalizer instance
 
-Normaly, the `NormalierInterface` implementation is set for you when instantiating a new `Writer`, however you can set your own normalizer instance.
+Normaly, the `NormalizerInterface` implementation is set for you when instantiating a new `Writer`, however you can set your own normalizer instance.
 
-Note: the normalizer must implement the `Lucid\Xml\Normalizer\NormalierInterface` interface.
+Note: the normalizer must implement the `Lucid\Xml\Normalizer\NormalizerInterface` interface.
 
 ```php
 <?php
@@ -286,3 +301,40 @@ $writer->setKeyMap([
 
 ```
 Note: you can also use use `addMappedAttribute($nodeName, $attributeName)` to add more mapped attributes.
+
+### Set value keys
+
+```php
+<?php
+
+$data = [
+	'foo' => [
+		'@attributes' => [
+			'bar' => 'baz'
+		],
+		'value' => 'tab'
+	]
+];
+```
+
+The data structure above would dump the following xml string
+
+```xml
+<foo bar="baz"><value>tab</value></foo>
+```
+
+However, if you need the value node as actual value of the parent node, you may
+use `Writer::useKeyAsValue(string $key)` to do so
+
+```php
+<?php
+
+$writer->useKeyAsValue('value');
+
+$writer->dump($data);
+```
+
+now dumps:
+```xml
+<foo bar="baz">tab</foo>
+```
