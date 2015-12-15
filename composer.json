@@ -1,7 +1,7 @@
 {
   "name": "lucid/xml",
   "license": "MIT",
-  "description": "Event Dispatcher Library",
+  "description": "Xml writing and parsing utilities",
   "keywords": ["xml", "parser"],
   "authors": [
     {
