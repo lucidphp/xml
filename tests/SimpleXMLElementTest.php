@@ -53,6 +53,10 @@ class SimpleXmlElementTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_int($xml->phpValue()));
 
+        $xml = new SimpleXMLElement('<node>0xNaN</node>');
+
+        $this->assertTrue(is_string($xml->phpValue()));
+
         $xml = new SimpleXMLElement('<node>true</node>');
 
         $this->assertTrue($xml->phpValue());

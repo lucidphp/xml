@@ -240,7 +240,7 @@ class Parser implements ParserInterface
             return $default;
         }
 
-        if (0 === strpos($val, '0x')) {
+        if (0 === strpos($val, '0x') && preg_match('#^[[:xdigit:]]+$#', substr($val, 2))) {
             return hexdec($val);
         }
 
