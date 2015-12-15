@@ -136,7 +136,7 @@ class Writer
     /**
      * addMappedAttribute
      *
-     * @param mixed $nodeName
+     * @param string $nodeName
      * @param mixed $attribute
      *
      * @return void
@@ -149,8 +149,8 @@ class Writer
     /**
      * isMappedAttribute
      *
-     * @param mixed $name
-     * @param mixed $key
+     * @param string $name
+     * @param string $key
      *
      * @return boolean
      */
