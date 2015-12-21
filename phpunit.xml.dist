@@ -10,8 +10,8 @@
     stopOnFailure="false"
     syntaxCheck="false">
   <testsuites>
-    <testsuite name="Xml">
-      <directory>./Tests/</directory>
+    <testsuite name="Lucid Xml">
+      <directory>./tests/</directory>
     </testsuite>
   </testsuites>
   <filter>
@@ -19,5 +19,8 @@
       <directory suffix=".php">./vendor</directory>
       <directory suffix=".php">./tests</directory>
     </blacklist>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./src</directory>
+    </whitelist>
   </filter>
 </phpunit>

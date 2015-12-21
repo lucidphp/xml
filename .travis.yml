@@ -6,31 +6,31 @@ matrix:
   fast_finish: true
   include:
     - php: 5.6
+      env:
+      - CS_CHECK_ENABLED: true
     - php: 7.0
       env:
       - CODE_COVERAGE_LOG: true
-      - CS_CHECK_ENABLED: true
     - php: hhvm
   allow_failures:
     - php: hhvm
 
 before_install:
-  - if [[ -z $CODE_COVERAGE_LOG ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - if [[ $CODE_COVERAGE_LOG != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
   - composer self-update
-  - composer install --prefer-source --no-interaction
-  - composer require squizlabs/php_codesniffer:~2.5
-  - composer require satooshi/php-coveralls:0.7.*@dev
+  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then composer require --no-update satooshi/php-coveralls:dev-master; fi
+  - if [[ $CS_CHECK_ENABLED == 'true' ]]; then composer require squizlabs/php_codesniffer:~2.5; fi
 
-before_script:
-  - mkdir -p build/logs
+install:
+  - composer install --prefer-source --no-interaction
 
 script:
-  - if [[ -z $CODE_COVERAGE_LOG ]]; then php vendor/bin/phpunit --verbose; fi;
-  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/phpunit --coverage-clover build/logs/clover.xml; fi;
+  - if [[ $CODE_COVERAGE_LOG != 'true' ]]; then php vendor/bin/phpunit --verbose; fi;
+  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/phpunit --coverage-clover clover.xml; fi;
   - if [[ $CS_CHECK_ENABLED == 'true' ]]; then php vendor/bin/phpcs --standard=PSR2 --ignore=vendor/* src tests; fi
 
-after_success:
-  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then travis_retry php vendor/bin/coveralls -v; fi
+after_script:
+  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/coveralls -v; fi
 
 notififation:
   on_success: never
