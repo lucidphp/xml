@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This File is part of the Lucid\Xml package
  *
@@ -9,8 +8,9 @@
  * that was distributed with this package.
  */
 
-
 namespace Lucid\Xml\Traits;
+
+use Lucid\Common\Helper\Arr;
 
 /**
  * @trait XmlHelperTrait
@@ -42,6 +42,6 @@ trait XmlHelperTrait
      */
     public function valueIsList($value)
     {
-        return is_array($value) && ctype_digit(implode(array_keys($value)));
+        return is_array($value) && Arr::isList($value, true);
     }
 }
