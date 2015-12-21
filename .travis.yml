@@ -16,11 +16,13 @@ matrix:
 
 before_install:
   - if [[ -z $CODE_COVERAGE_LOG ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - composer self-update
   - composer install --prefer-source --no-interaction
+  - composer require squizlabs/php_codesniffer:~2.5
+  - composer require satooshi/php-coveralls:0.7.*@dev
 
 before_script:
   - mkdir -p build/logs
-  - composer self-update
 
 script:
   - if [[ -z $CODE_COVERAGE_LOG ]]; then php vendor/bin/phpunit --verbose; fi;
