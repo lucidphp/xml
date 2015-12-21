@@ -47,6 +47,21 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function itShouldMakeThings()
+    {
+        $xml = '<root>
+            <data>
+                <item key="22">guff</item>
+                <item key="2">more guff</item>
+            </data>
+        </root>';
+        $parser = new Parser;
+        $parser->setIndexAttributeKey('key');
+        $parser->setIndexKey('item');
+
+        $data = $parser->parse($xml);
+    }
+    /** @test */
     public function itShouldParseAXmlFile()
     {
         $file = __DIR__.DIRECTORY_SEPARATOR.'Fixures'.DIRECTORY_SEPARATOR.'test.xml';
@@ -199,7 +214,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function itShouldParseItemsAndRespectArrayNotaion()
     {
-
         $xmlString =
         '<data>
             <items>
@@ -254,6 +268,55 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $data = $parser->parse($xmlString);
 
         $this->assertEquals(['data' => ['items' => ['item' => ['a', 'b', 'c', 'e'], 'bla' => 'd']]], $data);
+    }
+
+    /** @test */
+    public function itShouldParseMessedUpKeys()
+    {
+        $xmlString =
+        '<data>
+            <items>
+                <item index="2">a</item>
+                <item index="5">b</item>
+                <item index="44">c</item>
+                <bla>d</bla>
+                <item index="9">e</item>
+            </items>
+        </data>';
+
+        $parser = new Parser;
+        $parser->setPluralizer(function ($string) {
+            return $string . 's';
+        });
+
+        $data = $parser->parse($xmlString);
+
+        $this->assertEquals(['data' => ['items' => [ 2 => 'a', 5 => 'b', 44 => 'c', 'bla' => 'd', 9 => 'e']]], $data);
+
+        $xml =
+        '<data>
+            <item key="22">guff</item>
+            <item key="2">more guff</item>
+        </data>';
+        $parser = new Parser;
+        $parser->setIndexAttributeKey('key');
+        $parser->setIndexKey('item');
+
+        $data = $parser->parse($xml);
+
+        $this->assertEquals(['data' => [22 => 'guff', 2 => 'more guff']], $data);
+
+        $xml =
+        '<data>
+            <item index="22">guff</item>
+            <item index="2">more guff</item>
+        </data>';
+        $parser = new Parser;
+        $parser->setIndexKey('item');
+
+        $data = $parser->parse($xml);
+
+        $this->assertEquals(['data' => [22 => 'guff', 2 => 'more guff']], $data);
     }
 
     /** @test */

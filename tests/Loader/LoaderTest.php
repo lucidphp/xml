@@ -40,9 +40,15 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceof('DOMDocument', $xml);
 
-        $loader->setOption(Loader::SIMPLEXML, true);
+        $xml = $loader->loadDom($file);
+        $this->assertInstanceof('Lucid\Xml\Dom\DOMDocument', $xml);
 
-        $xml = $loader->load($file);
+        $this->assertInstanceof('DOMDocument', $xml);
+
+        $xml = $loader->load($file, [Loader::SIMPLEXML => true]);
+        $this->assertInstanceof('Lucid\Xml\SimpleXMLElement', $xml);
+
+        $xml = $loader->loadSimpleXml($file);
         $this->assertInstanceof('Lucid\Xml\SimpleXMLElement', $xml);
     }
 
@@ -50,39 +56,32 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
     public function itShouldLoadXmlStrings()
     {
         $loader = new Loader;
-        $loader->setOption(Loader::FROM_STRING, true);
 
-        $xml = $loader->load('<data></data>');
-        $this->assertInstanceof('DOMDocument', $xml);
+        $xml = $loader->loadDom('<data></data>', [Loader::FROM_STRING => true]);
+        $this->assertInstanceOf('DOMDocument', $xml);
     }
 
     /** @test */
     public function domClassesShouldBeSettable()
     {
-
         $file = $this->getFixure();
 
         $loader = new Loader;
-        $loader->setOption(Loader::DOM_CLASS, 'DOMDocument');
 
-        $xml = $loader->load($file);
+        $xml = $loader->loadDom($file, [Loader::DOM_CLASS => 'DOMDocument']);
 
         $this->assertFalse($xml instanceof \Lucid\Xml\Dom\DOMDocument);
-        $this->assertInstanceof('DOMDocument', $xml);
+        $this->assertInstanceOf('DOMDocument', $xml);
     }
 
     /** @test */
     public function simpleXmlClassesShouldBeSettable()
     {
-
         $file = $this->getFixure();
 
         $loader = new Loader;
 
-        $loader->setOption(Loader::SIMPLEXML, true);
-        $loader->setOption(Loader::SIMPLEXML_CLASS, 'SimpleXMLElement');
-
-        $xml = $loader->load($file);
+        $xml = $loader->loadSimpleXml($file, [Loader::SIMPLEXML_CLASS => 'SimpleXMLElement']);
 
         $this->assertFalse($xml instanceof \Lucid\Xml\SimpleXmlElement);
         $this->assertInstanceof('SimpleXMLElement', $xml);
@@ -94,10 +93,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $file = $this->getFixure();
 
         $loader = new Loader;
-        $loader->setOption(Loader::FROM_STRING, true);
-
         try {
-            $loader->load('<data><invalid></data>');
+            $loader->loadDom('<data><invalid></data>', [Loader::FROM_STRING => true]);
         } catch (\InvalidArgumentException $e) {
             $this->assertTrue(true);
             return;
@@ -108,26 +105,13 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->fail('test failed');
     }
 
-    /** @test */
-    public function cloningShouldResetOptions()
-    {
-        $loader = new Loader;
-        $loader->setOption(Loader::FROM_STRING, true);
-
-        $this->assertTrue($loader->getOption(Loader::FROM_STRING));
-
-        $loader = clone($loader);
-
-        $this->assertNull($loader->getOption(Loader::FROM_STRING));
-    }
-
     /**
      * get the fixure file
      *
      * @access protected
      * @return string
      */
-    protected function getFixure()
+    private function getFixure()
     {
         return dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixures'.DIRECTORY_SEPARATOR.'test.xml';
     }

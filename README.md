@@ -13,7 +13,7 @@
 ## Installing
 
 ```bash
-$ composer require lucid/xml --save
+$ composer require lucid/xml
 ```
 
 ## Testing
@@ -27,8 +27,7 @@ $ ./vendor/bin/phpunit
 ## The Parser
 
 The `Parser` class can parse xml string, files, DOMDocuments, and DOMElements
-to a php array.
-
+into a php array.
 
 ### Parsing xml strings
 ```php
@@ -83,23 +82,42 @@ $parser->parseDomElement($element);
 
 ## Parser Options
 
-### Merge attributes
-
+### Dealing with Attributes
+Xml attributes are captured as an deticated section within the actual node data.
+The section key defaults to `@attributes`, but can be changed using the `setAttributesKey` method.
 
 ```php
 <?php
 
 use Lucid\Xml\Parser;
 
+$xml = '<data><node id="1">some text</node></data>'
+
 $parser = new Parser;
+$parser->setAttributesKey('__attrs__');
+$parser->parse($xml);
+```
 
+```php
+['data' => ['node' => ['__attrs__' => ['id' => 1], 'value' => 'some text']]];
+```
+#### Merging attributes
+Setting `Parser::mergeAttributes(true)` will merge any attributes as key/value
+into the data set.
+
+```php
 $parser->setMergeAttributes(true);
+$parser->parse($xml);
+```
+The above example will output something simmilar to this:
 
+```php
+['data' => ['node' => ['id' => 1, 'value' => 'some text']]];
 ```
 
 ### Normalizing keys
 
-You my specifay how keys are transformed by setting a key normalizer callback.
+You may specifay how keys are being transformed by setting a key normalizer callback.
 
 The default normalizer transforms dashes to underscores and camelcase to snakecase notation.
 
@@ -116,23 +134,6 @@ $parser->setKeyNormalizer(function ($key) {
 });
 
 $parser->parseDomElement($element);
-
-```
-
-### Set the attributes key
-
-If attribute merging is disabled, use this to change the default attributes key
-(default is `@attributes`).
-
-
-```php
-<?php
-
-use Lucid\Xml\Parser;
-
-$parser = new Parser;
-
-$parser->setAttributesKey('@attrs');
 
 ```
 
@@ -175,11 +176,10 @@ To something like:
 
 ```
 
-Setting a pluralizer can fix this. 
+Setting a pluralizer can fix this.
 
 Note, that a pluralizer can be any [callable](http://www.php.net/manual/en/language.types.callable.php) that takes a string and returns
 a string.
-
 
 ```php
 <?php
@@ -240,7 +240,7 @@ $dom = $writer->writeToDom($data);
 
 ```
 
-##Writer options
+## Writer options
 
 ### Set the normalizer instance
 
@@ -337,4 +337,55 @@ $writer->dump($data);
 now dumps:
 ```xml
 <foo bar="baz">tab</foo>
+```
+
+### Writing indexed array structure
+
+Indexed arrays will create xml structures like the example below:
+
+```php
+$data = ['data' => [1, 2, 3]];
+$writer->dump($data);
+```
+
+```xml
+<data>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+</data>
+```
+
+You can change the node names associated with indexed items by using the
+`useKeyAsIndex(string $key)` method.
+
+```php
+$writer->useKeyAsIndex('thing');
+$writer->dump($data);
+```
+
+```xml
+<data>
+	<thing>1</thing>
+	<thing>2</thing>
+	<thing>3</thing>
+</data>
+```
+
+### Writing arrays with none valid index keys
+
+Arrays containing invalid indices (e.g. unordererd lists) will be treated
+slightly different.
+
+```php
+$data = ['data' => [1 => 'foo', 4 => 'bar', 3 => 'baz']];
+$writer->dump($data);
+```
+
+```xml
+<data>
+    <item index="1">foo</item>
+    <item index="4">bar</item>
+    <item index="3">baz</item>
+</data>
 ```

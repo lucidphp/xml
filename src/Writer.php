@@ -11,6 +11,7 @@
 
 namespace Lucid\Xml;
 
+use Lucid\Common\Helper\Arr;
 use Lucid\Xml\DOM\DOMElement;
 use Lucid\Xml\DOM\DOMDocument;
 use Lucid\Xml\Traits\XmlHelperTrait;
@@ -29,25 +30,28 @@ class Writer
     use XmlHelperTrait;
 
     /** @var DOMDocument */
-    protected $dom;
+    private $dom;
 
     /** @var string */
-    protected $encoding;
+    private $encoding;
 
     /** @var NormalizerInterface */
-    protected $normalizer;
+    private $normalizer;
 
     /** @var callable */
-    protected $inflector;
+    private $inflector;
 
     /** @var mixed */
-    protected $attributemap;
+    private $attributemap;
 
     /** @var string */
-    protected $nodeValueKey;
+    private $nodeValueKey;
 
     /** @var string */
-    protected $indexKey;
+    private $indexKey;
+
+    /** @var string */
+    private $indexAttrKey;
 
     /**
      * Create a new xml writer instance.
@@ -66,7 +70,7 @@ class Writer
     }
 
     /**
-     * setEncoding
+     * Sets the encoding.
      *
      * @param mixed $encoding
      *
@@ -78,7 +82,7 @@ class Writer
     }
 
     /**
-     * getEncoding
+     * Gets the encoding.
      *
      * @return string
      */
@@ -88,7 +92,7 @@ class Writer
     }
 
     /**
-     * setNormalizer
+     * Sets the Normalizer.
      *
      * @param NormalizerInterface $normalizer
      *
@@ -100,7 +104,7 @@ class Writer
     }
 
     /**
-     * getNormalizer
+     * Returns the normalizer.
      *
      * @return Thapp\XmlBuilder\NormalizerInterface
      */
@@ -110,7 +114,7 @@ class Writer
     }
 
     /**
-     * setInflector
+     * Sets the inflector.
      *
      * @param callable $inflector
      *
@@ -122,7 +126,7 @@ class Writer
     }
 
     /**
-     * setAttributeMapp
+     * Sets the Nodename => attribtues map.
      *
      * @param array $map
      *
@@ -134,10 +138,10 @@ class Writer
     }
 
     /**
-     * addMappedAttribute
+     * Adds a mapped attribute to a nodename.
      *
      * @param string $nodeName
-     * @param mixed $attribute
+     * @param string $attribute
      *
      * @return void
      */
@@ -147,12 +151,12 @@ class Writer
     }
 
     /**
-     * isMappedAttribute
+     * Tells if a node name as a mapped attribute of `$key`.
      *
      * @param string $name
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function isMappedAttribute($name, $key)
     {
@@ -166,9 +170,10 @@ class Writer
     }
 
     /**
-     * useKeyAsValue
+     * Sets the key that indicates a node value.
      *
-     * @param mixed $key
+     * @param string $key
+     * @param bool $normalize
      *
      * @throws \InvalidArgumentException if $key is not null and an invalid nodename.
      * @return void
@@ -179,13 +184,14 @@ class Writer
             throw new \InvalidArgumentException(sprintf('%s is an invalid node name', $key));
         }
 
-        $this->nodeValueKey = $this->normalizer->normalize($key);
+        $this->nodeValueKey = $normalize ? $this->normalizer->normalize($key) : $key;
     }
 
     /**
-     * setIndexKey
+     * Sets the index key used as key -> node identifier.
      *
      * @param string $key
+     * @param bool $normalize
      *
      * @throws \InvalidArgumentException if $key is an invalid nodename.
      * @return void
@@ -201,9 +207,30 @@ class Writer
             throw new \InvalidArgumentException(sprintf('%s is an invalid node name', $key));
         }
 
-        $this->indexKey = $this->normalizer->normalize($key);
+        $this->indexKey = $normalize ? $this->normalizer->normalize($key) : $key;
     }
 
+    /**
+     * Sets the index key used in attributes.
+     *
+     * @param string $key
+     * @param bool $normalize
+     *
+     * @return void
+     */
+    public function useKeyAsIndexAttribute($key, $normalize = false)
+    {
+        if (null === $key) {
+            $this->indexAttrKey = null;
+            return;
+        }
+
+        if (true !== $normalize && !$this->isValidNodeName($key)) {
+            throw new \InvalidArgumentException(sprintf('%s is an invalid attribute name', $key));
+        }
+
+        $this->indexAttrKey = $normalize ? $this->normalizer->normalize($key) : $key;
+    }
 
     /**
      * Dump the input data to a xml string.
@@ -274,8 +301,9 @@ class Writer
      */
     protected function buildXmlFromTraversable(\DOMDocument $dom, \DOMNode $node, $data)
     {
-        $normalizer = $this->getNormalizer();
+        $normalizer    = $this->getNormalizer();
         $hasAttributes = false;
+        $isList        = is_array($data) && Arr::isList($data, true);
 
         foreach ($data as $key => $value) {
 
@@ -288,9 +316,26 @@ class Writer
                 continue;
             }
 
-            // set the default index key if there's no other way:
+            // ensure "node value keys" are at the bottom.
+            if (null !== $this->nodeValueKey && is_array($value) && isset($value[$this->nodeValueKey])) {
+                $val = $value[$this->nodeValueKey];
+                unset($value[$this->nodeValueKey]);
+                $value[$this->nodeValueKey] = $val;
+            }
+
+            // Set the default index key if there's no other way.
             if (is_int($key) || !$this->isValidNodeName($key)) {
+                $cey = $key;
                 $key = $this->indexKey;
+                // In order to keep the original index for none "list-like" arrays
+                // (numeric keys and none zero based indecies) add the original key
+                // as index attribute
+                if (is_int($cey) && !$isList) {
+                    $value = [
+                        '@AAA' => [$this->indexAttrKey ?: 'index' => $cey],
+                        $this->nodeValueKey ?: 'value' => $value,
+                    ];
+                }
             }
 
             if (is_array($value) && !is_int($key) && $this->appendDomList($normalizer, $dom, $node, $key, $value)) {
@@ -321,12 +366,11 @@ class Writer
      * @param mixed $key
      * @param mixed $value
      *
-     * @return boolean
+     * @return bool
      */
     protected function appendDomList(NormalizerInterface $normalizer, \DOMDocument $dom, $node, $key, $value)
     {
-        // check for integer keys
-        if (!ctype_digit(implode('', array_keys($value)))) {
+        if (!Arr::isList($value, true)) {
             return false;
         }
 
@@ -360,7 +404,7 @@ class Writer
      *
      * @param mixed $name
      *
-     * @return boolean
+     * @return bool
      */
     protected function isValidNodeName($name)
     {
@@ -386,15 +430,15 @@ class Writer
     /**
      * mapAttributes
      *
-     * @return boolean
+     * @return bool
      */
     private function mapAttributes(\DOMNode $node, $key, $value)
     {
-        if ($attrName = $this->getAttributeName($node, $key)) {
-
+        if (null !== $attrName = $this->getAttributeName($key)) {
             foreach ((array)$value as $attrKey => $attrValue) {
                 $node->setAttribute($attrKey, $this->getAttributeValue($attrValue, $attrKey));
             }
+
 
             return true;
         }
@@ -415,7 +459,7 @@ class Writer
      * @param DOMElement $node
      * @param mixed $value
      *
-     * @return null|boolean returns false if no value was set, else null;
+     * @return null|bool returns false if no value was set, else null;
      */
     private function setElementValue(DOMDocument $dom, DOMElement $node, $value = null)
     {
@@ -477,7 +521,7 @@ class Writer
      * @param DOMNode $node
      * @param string  $name
      * @param mixed   $value
-     * @param boolean $hasAttributes
+     * @param bool $hasAttributes
      *
      * @return void
      */
@@ -486,7 +530,9 @@ class Writer
         $element = $dom->createElement($name);
 
         if ($hasAttributes && $this->nodeValueKey === $name) {
-            return $this->setElementValue($dom, $node, $value);
+            $this->setElementValue($dom, $node, $value);
+
+            return;
         }
 
         $this->setElementValue($dom, $element, $value);
@@ -494,29 +540,28 @@ class Writer
     }
 
     /**
-     * getAttributeName
+     * Extracts the raw attribute indicator.
      *
-     * @param DOMNode $parent
-     * @param mixed $key
+     * @param string $key string with leading `@`.
      *
-     * @return string|boolean
+     * @return string
      */
-    private function getAttributeName(\DOMNode $parent, $key)
+    private function getAttributeName($key)
     {
         if (0 === strpos($key, '@') && $this->isValidNodeName($attrName = substr($key, 1))) {
             return $attrName;
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * Create a text node on a DOMNode.
+     * Creates a text node on a DOMNode.
      *
      * @param DOMNode $node
      * @param string  $value
      *
-     * @return boolean
+     * @return bool
      */
     private function createText(\DOMDocument $dom, \DOMNode $node, $value)
     {
@@ -525,7 +570,7 @@ class Writer
     }
 
     /**
-     * Create a CDATA section node on a DOMNode.
+     * Creates a CDATA section node on a DOMNode.
      *
      * @param DOMNode $node
      * @param string  $value

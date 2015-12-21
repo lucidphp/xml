@@ -44,6 +44,24 @@ interface LoaderInterface
     public function load($xml);
 
     /**
+     * loadToDom
+     *
+     * @param string $xml
+     *
+     * @return \DOMDocument
+     */
+    public function loadDom($xml);
+
+    /**
+     * loadToSimpleXml
+     *
+     * @param string $xml
+     *
+     * @return \SimpleXmlElement
+     */
+    public function loadSimpleXml($xml);
+
+    /**
      * setOption
      *
      * @param string $option

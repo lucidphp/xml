@@ -29,43 +29,29 @@ class Normalizer implements NormalizerInterface
 {
     use XmlHelperTrait;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $objectCache;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $ignoredAttributes;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $ignoredObjects;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $normalized;
 
-    /**
-     * Creates a new Normalizer instance.
-     */
+    /** Creates a new Normalizer instance. */
     public function __construct()
     {
-        $this->normalized = [];
-        $this->objectCache = [];
-        $this->ignoredObjects = [];
+        $this->normalized        = [];
+        $this->objectCache       = [];
+        $this->ignoredObjects    = [];
         $this->ignoredAttributes = [];
     }
 
     /**
-     * normalize
-     *
-     * @param mixed $value
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function normalize($value)
     {
@@ -79,15 +65,8 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * ensureArray
-     *
-     * Will be removed.
-     *
-     * @param mixed $data
-     * @access public
-     *
+     * {@inheritdoc}
      * @deprecated
-     * @return array
      */
     public function ensureArray($data)
     {
@@ -99,12 +78,7 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * ensureBildable
-     *
-     * @param mixed $data
-     * @access public
-     * @since v0.1.3
-     * @return mixed
+     * {@inheritdoc}
      */
     public function ensureBuildable($data)
     {
@@ -124,9 +98,10 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * setIgnoredAttributes
+     * Sets ignored attributes
      *
-     * @access public
+     * @param array $attributes
+     *
      * @return void
      */
     public function setIgnoredAttributes(array $attributes)
@@ -135,11 +110,10 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * addIgnoredAttribute
+     * Adds an ignored attribute
      *
-     * @param mixed $attribute
+     * @param string $attribute
      *
-     * @access public
      * @return void
      */
     public function addIgnoredAttribute($attribute)
@@ -148,26 +122,24 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * setIgnoredAttributes
+     * Sets ignored classes
      *
-     * @param mixed $attributes
-     * @access public
+     * @param array $classes
+     *
      * @return void
      */
     public function setIgnoredObjects(array $classes)
     {
         $this->ignoredObjects = [];
 
-        foreach ($classes as $classname) {
-            $this->addIgnoredObject($classname);
-        }
+        array_map([$this, 'addIgnoredObject'], $classes);
     }
 
     /**
-     * addIgnoredObject
+     * Adds an ignored class.
      *
-     * @param mixed $classname
-     * @access public
+     * @param string $classname
+     *
      * @return void
      */
     public function addIgnoredObject($classname)
@@ -176,11 +148,10 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * convertValue
+     * Conversts a given value into a traversable one.
      *
      * @param mixed $data
      *
-     * @access protected
      * @return mixed
      */
     protected function convertValue($data)
@@ -197,11 +168,11 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * isTraversable
+     * Checks if given value is traversable.
      *
      * @param mixed $data
-     * @access protected
-     * @return boolean
+     *
+     * @return bool
      */
     protected function isTraversable($data)
     {
@@ -209,11 +180,10 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * recursiveConvertArray
+     * Recursivly converts a given value to an array.
      *
      * @param array $data
-     * @param mixed $ignoreobjects
-     * @access protected
+     *
      * @return array
      */
     protected function recursiveConvertArray($data)

@@ -34,7 +34,6 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $args = [
             'foo' => ['@attributes' => ['bar' => 'baz'], 'value' => 'tab']
         ];
-        var_dump($w->dump($args));
     }
 
 
@@ -413,7 +412,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function itIsExpectedThat()
+    public function itShouldWriteSimpleValues()
     {
         $writer = new Writer($this->getNormalizerMock());
         $xml = $writer->dump(null);
@@ -423,6 +422,43 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $xml = $writer->dump('foo');
 
         $this->assertXmlStringEqualsXmlString('<root>foo</root>', $xml);
+    }
+
+    /**
+     * @test
+     * @dataProvider indexedDataProvider
+     */
+    public function itShouldWriteArrayStructures(array $data, $xml, $valueKey = null)
+    {
+        $writer = new Writer($this->getNormalizerMock());
+
+        if (null !== $valueKey) {
+            $writer->useKeyAsValue($valueKey);
+        }
+
+        $this->assertXmlStringEqualsXmlString($xml, $writer->dump($data));
+    }
+
+    public function indexedDataProvider()
+    {
+        return [
+            [
+                [1, 2, 3, 4],
+                '<root><item>1</item><item>2</item><item>3</item><item>4</item></root>'
+            ],
+            [
+                [['nv' => 'bb', '@attrs' => ['index' => '22']]],
+                '<root><item index="22">bb</item></root>', 'nv'
+            ],
+            [
+                [['@attrs' => ['index' => '22'], 'value' => 'bb']],
+                '<root><item index="22">bb</item></root>', 'value'
+            ],
+            [
+                [33 => 'foo', 1 => 'bar', 0 => 'baz'],
+                '<root><item index="33">foo</item><item index="1">bar</item><item index="0">baz</item></root>', 'value'
+            ]
+        ];
     }
 
     /** @test */

@@ -28,28 +28,17 @@ use Lucid\Common\Traits\Getter;
  */
 class Parser implements ParserInterface
 {
-    use Getter;
-    use XmlHelperTrait;
+    use Getter,
+        XmlHelperTrait;
 
-    /**
-     * pluralizer
-     *
-     * @var callable
-     */
+    /** @var callable */
     private $pluralizer;
 
-    /**
-     * keyNormalizer
-     *
-     * @var callable
-     */
+    /** @var callable */
     private $keyNormalizer;
 
     /**
-     * options
-     *
-     * @var array
-     */
+     * @var array */
     private $options;
 
     /**
@@ -66,7 +55,7 @@ class Parser implements ParserInterface
     /**
      * Toggle on/off merging attributes to array keys.
      *
-     * @param boolean $merge
+     * @param bool $merge
      *
      * @return void
      */
@@ -114,7 +103,19 @@ class Parser implements ParserInterface
      */
     public function setIndexKey($key)
     {
-        $this->options['list_key'] = $key;
+        $this->options['index_key'] = $key;
+    }
+
+    /**
+     * Sets the index key used in attributes.
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setIndexAttributeKey($key)
+    {
+        $this->options['index_attr_key'] = $key;
     }
 
     /**
@@ -124,7 +125,17 @@ class Parser implements ParserInterface
      */
     public function getIndexKey()
     {
-        return $this->getListKey();
+        return $this->getDefault($this->options, 'index_key', null);
+    }
+
+    /**
+     * getIndexAttributeKey
+     *
+     * @return string
+     */
+    public function getIndexAttributeKey()
+    {
+        return $this->getDefault($this->options, 'index_attr_key', 'index');
     }
 
     /**
@@ -185,13 +196,10 @@ class Parser implements ParserInterface
      */
     public function parseDomElement(DOMElement $xml)
     {
-        $attributes = $this->parseElementAttributes($xml);
-
+        $result        = $this->parseElementNodes($xml->xpath('./child::*'), $xml->nodeName);
+        $attributes    = $this->parseElementAttributes($xml);
+        $text          = $this->prepareTextValue($xml, current($attributes) ?: null);
         $hasAttributes = (bool)$attributes;
-
-        $text = $this->prepareTextValue($xml, current($attributes) ?: null);
-
-        $result = $this->parseElementNodes($xml->xpath('./child::*'), $xml->nodeName);
 
         if ($hasAttributes) {
 
@@ -260,7 +268,7 @@ class Parser implements ParserInterface
      * of its child elements.
      *
      * @param DOMElement $element
-     * @param boolean $concat
+     * @param bool $concat
      *
      * @return string|array returns an array of strings if `$concat` is `false`
      */
@@ -302,32 +310,22 @@ class Parser implements ParserInterface
     }
 
     /**
-     * Get the list identifier key.
-     *
-     * @return string
-     */
-    protected function getListKey()
-    {
-        return $this->getDefault($this->options, 'list_key', null);
-    }
-
-    /**
      * Check if a given string is the list identifier.
      *
      * @param string $name
      * @param string $prefix
      *
-     * @return boolean
+     * @return bool
      */
     protected function isListKey($name, $prefix = null)
     {
-        return $this->prefixKey($this->getListKey(), $prefix) === $name;
+        return $this->prefixKey($this->getIndexKey(), $prefix) === $name;
     }
 
     /**
      * Determine weather to merge attributes or not.
      *
-     * @return boolean
+     * @return bool
      */
     protected function mergeAttributes()
     {
@@ -343,9 +341,9 @@ class Parser implements ParserInterface
     protected function getLoaderConfig()
     {
         return [
-            LoaderInterface::FROM_STRING => false,
-            LoaderInterface::SIMPLEXML => false,
-            LoaderInterface::DOM_CLASS => __NAMESPACE__.'\\Dom\DOMDocument',
+            LoaderInterface::FROM_STRING     => false,
+            LoaderInterface::SIMPLEXML       => false,
+            LoaderInterface::DOM_CLASS       => __NAMESPACE__.'\\Dom\DOMDocument',
             LoaderInterface::SIMPLEXML_CLASS => __NAMESPACE__.'\\SimpleXMLElement'
         ];
     }
@@ -367,7 +365,7 @@ class Parser implements ParserInterface
     }
 
     /**
-     * Convert boolean like and numeric values to their php equivalent values.
+     * Convert bool like and numeric values to their php equivalent values.
      *
      * @param DOMElement $xml the element to get the value from
      * @param array $attributes
@@ -395,7 +393,6 @@ class Parser implements ParserInterface
         $result = [];
 
         foreach ($children as $child) {
-
             $prefix = $child->prefix ?: null;
             $oname  = $this->normalizeKey($child->nodeName);
             $name   = $this->prefixKey($oname, $prefix);
@@ -418,7 +415,7 @@ class Parser implements ParserInterface
      * @param string $name
      * @param array $result
      *
-     * @return mixed|boolean the result, else `false` if no result.
+     * @return mixed|bool the result, else `false` if no result.
      */
     private function parseSetResultNodes(DOMElement $child, $name, array &$result = null)
     {
@@ -444,16 +441,24 @@ class Parser implements ParserInterface
      * @param string $pName
      * @param array $result
      * @param string $prefix
+     * @param array $attrs
      *
      * @return mixed the result
      */
     private function parseUnsetResultNodes(DOMElement $child, $name, $oname, $pName, array &$result, $prefix = null)
     {
-        $value = static::getPhpValue($child, null, $this);
-
         if ($this->isListKey($name, $prefix) || $this->isEqualOrPluralOf($this->normalizeKey($pName), $oname)) {
-            return $result[] = $value;
+            // if attributes index is set, use it as index
+            if (($index = $child->getAttribute($this->getIndexAttributeKey())) && 0 !== strlen($index)) {
+                $child->removeAttribute($this->getIndexAttributeKey());
+
+                return $result[static::getPhpValue($index)] = static::getPhpValue($child, null, $this);
+            }
+
+            return $result[] = static::getPhpValue($child, null, $this);
         }
+
+        $value = static::getPhpValue($child, null, $this);
 
         if (1 < $this->getEqualNodes($child, $prefix)->length) {
             return $result[$name][] = $value;
@@ -471,20 +476,16 @@ class Parser implements ParserInterface
      */
     private function parseElementAttributes(DOMElement $xml)
     {
+        $attrs        = [];
         $elementAttrs = $xml->xpath('./@*');
-
-        $attrs = [];
 
         if (0 === $elementAttrs->length) {
             return $attrs;
         }
 
         foreach ($elementAttrs as $key => $attribute) {
-
             $value = static::getPhpValue($attribute->nodeValue, null, $this);
-
             $name = $this->normalizeKey($attribute->nodeName);
-
             $attrs[$this->prefixKey($name, $attribute->prefix ?: null)] = $value;
         }
 
@@ -497,7 +498,7 @@ class Parser implements ParserInterface
      * @param string $name the input string
      * @param string $singular the string to compare with
      *
-     * @return boolean
+     * @return bool
      */
     private function isEqualOrPluralOf($name, $singular)
     {
