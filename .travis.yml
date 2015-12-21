@@ -23,14 +23,15 @@ before_install:
 
 install:
   - composer install --prefer-source --no-interaction
+  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then mkdir -p coverage; fi
 
 script:
   - if [[ $CODE_COVERAGE_LOG != 'true' ]]; then php vendor/bin/phpunit --verbose; fi;
-  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/phpunit --coverage-clover clover.xml; fi;
+  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/phpunit --coverage-clover coverage/clover.xml; fi;
   - if [[ $CS_CHECK_ENABLED == 'true' ]]; then php vendor/bin/phpcs --standard=PSR2 --ignore=vendor/* src tests; fi
 
 after_script:
-  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/coveralls -v; fi
+  - if [[ $CODE_COVERAGE_LOG == 'true' ]]; then php vendor/bin/coveralls; fi
 
 notififation:
   on_success: never
