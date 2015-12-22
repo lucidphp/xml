@@ -48,7 +48,7 @@ class SimpleInflector implements InflectorInterface
      *
      * @var array
      */
-    protected static $_plurals = [
+    protected static $splurals = [
         '~(\w+[^y])y$~i' => '$1ies',
         '~(\w+(as|ox))$~i' => '$1es',
     ];
@@ -58,7 +58,7 @@ class SimpleInflector implements InflectorInterface
      *
      * @var array
      */
-    protected static $_singulars = [
+    protected static $ssingulars = [
         '~(\w+[^ies])ies$~i' => '$1y',
         '~(\w+(ox|as))(es)$~i' => '$1',
     ];
@@ -186,7 +186,7 @@ class SimpleInflector implements InflectorInterface
      */
     protected function setSingulars(array $singulars)
     {
-        $this->singulars = array_merge(static::$_singulars, $singulars);
+        $this->singulars = array_merge(static::$ssingulars, $singulars);
     }
 
     /**
@@ -198,6 +198,6 @@ class SimpleInflector implements InflectorInterface
      */
     protected function setPlurals(array $plurals)
     {
-        $this->plurals = array_merge(static::$_plurals, $plurals);
+        $this->plurals = array_merge(static::$splurals, $plurals);
     }
 }

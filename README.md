@@ -5,10 +5,8 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/lucidphp/xml/blob/master/LICENSE.md)
 
 [![Build Status](https://img.shields.io/travis/lucidphp/xml/master.svg?style=flat-square)](https://travis-ci.org/lucidphp/xml)
-<!--
 [![Code Coverage](https://img.shields.io/coveralls/lucidphp/xml/master.svg?style=flat-square)](https://coveralls.io/r/lucidphp/xml)
--->
-[![HHVM](https://img.shields.io/hhvm/lucid/xml/master.svg?style=flat-square)](http://hhvm.h4cc.de/package/lucid/xml)
+[![HHVM](https://img.shields.io/hhvm/lucid/xml/dev-master.svg?style=flat-square)](http://hhvm.h4cc.de/package/lucid/xml)
 
 ## Installing
 
