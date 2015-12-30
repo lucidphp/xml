@@ -1,12 +1,21 @@
 # XML writer and parser utilities
 
 [![Author](http://img.shields.io/badge/author-iwyg-blue.svg?style=flat-square)](https://github.com/iwyg)
+<<<<<<< HEAD
 [![Source Code](http://img.shields.io/badge/source-lucid/signal-blue.svg?style=flat-square)](https://github.com/lucidphp/xml/tree/develop)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/lucidphp/xml/blob/develop/LICENSE.md)
 
 [![Build Status](https://img.shields.io/travis/lucidphp/xml/develop.svg?style=flat-square)](https://travis-ci.org/lucidphp/xml)
 [![Code Coverage](https://img.shields.io/coveralls/lucidphp/xml/develop.svg?style=flat-square)](https://coveralls.io/r/lucidphp/xml)
 [![HHVM](https://img.shields.io/hhvm/lucid/xml/dev-develop.svg?style=flat-square)](http://hhvm.h4cc.de/package/lucid/xml)
+=======
+[![Source Code](http://img.shields.io/badge/source-lucid/signal-blue.svg?style=flat-square)](https://github.com/lucidphp/xml/tree/master)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/lucidphp/xml/blob/master/LICENSE.md)
+
+[![Build Status](https://img.shields.io/travis/lucidphp/xml/master.svg?style=flat-square)](https://travis-ci.org/lucidphp/xml)
+[![Code Coverage](https://img.shields.io/coveralls/lucidphp/xml/master.svg?style=flat-square)](https://coveralls.io/r/lucidphp/xml)
+[![HHVM](https://img.shields.io/hhvm/lucid/xml/dev-master.svg?style=flat-square)](http://hhvm.h4cc.de/package/lucid/xml)
+>>>>>>> 2489a7c08571aba6438a879b0cc2f11e43334bad
 
 ## Installing
 
