@@ -12,8 +12,6 @@ matrix:
       env:
       - CODE_COVERAGE_LOG: true
     - php: hhvm
-  allow_failures:
-    - php: hhvm
 
 before_install:
   - if [[ $CODE_COVERAGE_LOG != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
