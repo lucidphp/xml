@@ -17,9 +17,11 @@ use DOMDocument as DOM;
 use SimpleXMLElement as SimpleXML;
 
 /**
- * @class simpleXMLElementTest
+ * @class SimpleXMLElementTest
+ *
  * @package Lucid\Xml
  * @version $Id$
+ * @author iwyg <mail@thomas-appel.com>
  */
 class SimpleXmlElementTest extends \PHPUnit_Framework_TestCase
 {
