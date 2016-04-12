@@ -202,7 +202,6 @@ class Parser implements ParserInterface
         $hasAttributes = (bool)$attributes;
 
         if ($hasAttributes) {
-
             if (null !== $text) {
                 $result['value'] = $text;
             }
@@ -277,7 +276,6 @@ class Parser implements ParserInterface
         $textNodes = [];
 
         foreach ($element->xpath('./text()') as $text) {
-
             if ($value = static::clearValue($text->nodeValue)) {
                 $textNodes[] = $value;
             }

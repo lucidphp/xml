@@ -13,18 +13,22 @@ namespace Lucid\Xml\Tests;
 
 use Lucid\Xml\Dom\DOMDocument;
 use Lucid\Xml\SimpleXMLElement;
+use DOMDocument as DOM;
+use SimpleXMLElement as SimpleXML;
 
 /**
- * @class simpleXMLElementTest
+ * @class SimpleXMLElementTest
+ *
  * @package Lucid\Xml
  * @version $Id$
+ * @author iwyg <mail@thomas-appel.com>
  */
 class SimpleXmlElementTest extends \PHPUnit_Framework_TestCase
 {
     /** @test */
     public function itShouldBeInstantiable()
     {
-        $this->assertInstanceof('\SimpleXMLElement', new SimpleXMLElement('<data></data>'));
+        $this->assertInstanceof('SimpleXMLElement', new SimpleXMLElement('<data></data>'));
     }
 
     /** @test */
@@ -69,20 +73,23 @@ class SimpleXmlElementTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function itShouldAppendCdataSections()
     {
-
         $xml = new SimpleXMLElement('<node></node>');
 
         $xml->addCDATASection('string');
 
         $this->assertXmlStringEqualsXmlString('<node><![CDATA[string]]></node>', $xml->asXML());
 
+        if (defined('HHVM_VERSION') && version_compare(HHVM_VERSION, '3.7', '<')) {
+            $this->markTestIncomplete('HHVM segmentation fault.');
+        }
+
         $xml = new SimpleXMLElement('<node></node>');
-        $xml->addCDATASection(new \SimpleXMLElement('<data>string</data>'));
+        $xml->addCDATASection(new SimpleXML('<data>string</data>'));
 
         $this->assertXmlStringEqualsXmlString('<node><![CDATA[<data>string</data>]]></node>', $xml->asXML());
 
         $xml = new SimpleXMLElement('<node></node>');
-        $dom = new \DOMDocument;
+        $dom = new DOM;
         $dom->loadXML('<data>string</data>');
         $xml->addCDATASection($dom);
 
@@ -129,7 +136,7 @@ class SimpleXmlElementTest extends \PHPUnit_Framework_TestCase
     public function itShouldAppendChildNodes()
     {
         $xml = new SimpleXMLElement('<node></node>');
-        $xml->appendChildNode(new \SimpleXMLElement('<foo>bar</foo>'));
+        $xml->appendChildNode(new SimpleXML('<foo>bar</foo>'));
 
         $this->assertXmlStringEqualsXmlString('<node><foo>bar</foo></node>', $xml->asXML());
     }

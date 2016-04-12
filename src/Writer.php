@@ -306,7 +306,6 @@ class Writer
         $isList        = is_array($data) && Arr::isList($data, true);
 
         foreach ($data as $key => $value) {
-
             if (!is_scalar($value) && !($value = $normalizer->ensureBuildable($value))) {
                 continue;
             }
@@ -375,14 +374,12 @@ class Writer
         }
 
         if (($useKey = ($skey = $this->inflect($key)) && ($key !== $skey)) || (null !== $this->indexKey)) {
-
             $parentNode = $dom->createElement($key);
 
             if (!$useKey) {
                 $parentNode = $dom->createElement($key);
                 $this->buildXmlFromTraversable($dom, $parentNode, $value);
             } else {
-
                 foreach ($value as $arrayValue) {
                     $this->appendDOMNode($dom, $parentNode, $skey, $arrayValue);
                 }
