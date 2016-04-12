@@ -191,7 +191,6 @@ class Normalizer implements NormalizerInterface
         $out = [];
 
         foreach ($data as $key => $value) {
-
             $nkey = $this->normalize($key);
 
             if (in_array($nkey, $this->ignoredAttributes)) {
@@ -199,7 +198,6 @@ class Normalizer implements NormalizerInterface
             }
 
             $out[$nkey] = is_scalar($value) ? $value : $this->convertValue($value);
-
         }
 
         return $out;
