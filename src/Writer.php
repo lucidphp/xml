@@ -12,8 +12,8 @@
 namespace Lucid\Xml;
 
 use Lucid\Common\Helper\Arr;
-use Lucid\Xml\DOM\DOMElement;
-use Lucid\Xml\DOM\DOMDocument;
+use Lucid\Xml\Dom\DOMElement;
+use Lucid\Xml\Dom\DOMDocument;
 use Lucid\Xml\Traits\XmlHelperTrait;
 use Lucid\Xml\Normalizer\Normalizer;
 use Lucid\Xml\Normalizer\NormalizerInterface;
