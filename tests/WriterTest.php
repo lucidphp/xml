@@ -356,7 +356,6 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->fail('failed');
-
     }
 
     /** @test */
@@ -374,7 +373,6 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->fail('failed');
-
     }
 
     /** @test */

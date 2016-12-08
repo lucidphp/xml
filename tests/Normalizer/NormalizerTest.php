@@ -184,7 +184,6 @@ class NormalizerTest extends \PHPUnit_Framework_TestCase
 
         $normalizer = new Normalizer;
         $this->assertSame($data, $normalizer->ensureBuildable($data));
-
     }
 
     /** @test */
